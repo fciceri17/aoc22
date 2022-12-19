@@ -32,26 +32,17 @@ def compare_list(l1, l2):
         if len(l2) - 1 < i and len(l2)<len(l1):
             return -1
         if isinstance(elem, list):
-            if isinstance(l2[i], list):
-                rv = compare_list(elem, l2[i])
-                if rv!=0:
-                    return rv
-            else:
-                rv = compare_list(elem, [l2[i]])
-                if rv!=0:
-                    return rv
+            c1 = elem
+            c2 = l2[i] if isinstance(l2[i], list) else [l2[i]]
         else:
-            if isinstance(l2[i], list):
-                rv =  compare_list([elem], l2[i])
-                if rv!=0:
-                    return rv
-            else:
-                if elem<l2[i]:
-                    return 1
-                elif elem>l2[i]:
-                    return -1
-                else:
+            if not isinstance(l2[i], list):
+                if elem == l2[i]:
                     continue
+                return 1 if elem<l2[i] else -1
+            else:
+                c1,c2 = [elem], l2[i]
+        if rv:=compare_list(c1,c2):
+            return rv
     if len(l2)>len(l1):
         return 1
     return 0
@@ -65,7 +56,6 @@ print(sum(idxs))
 
 packets = [x for y in [eval(pair.replace('\n', ',')) for pair in pairs] for x in y] + [[[2]]] + [[[6]]]
 assigned = []
-snt = []
 while len(assigned)<len(packets):
     left = set(list(range(len(packets)))).difference(assigned)
     for i in left:
@@ -74,7 +64,5 @@ while len(assigned)<len(packets):
                 break
         else:
             assigned.append(i)
-            if i>len(packets)-2:
-                snt.append(i)
 print(math.prod([i + 1 for i in range(len(assigned)) if assigned[i] > len(packets) - 3]))
 
